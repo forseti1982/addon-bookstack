@@ -236,3 +236,9 @@ SOFTWARE.
 [releases]: https://github.com/hassio-addons/addon-bookstack/releases
 [repository]: https://github.com/hassio-addons/repository
 [semver]: http://semver.org/spec/v2.0.0
+
+## SwiPay POS PMS demo
+
+Für den angeforderten lokalen POS/PMS-Prototyp inkl. Terminal-Simulator und Dashboard siehe:
+
+- [`pos-pms/README.md`](pos-pms/README.md)

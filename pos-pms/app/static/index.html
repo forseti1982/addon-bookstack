@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SwiPay POS PMS Dashboard</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #f5f7fa; }
+      .grid { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+      .card { background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 1px 4px #00000020; }
+      button { border: 0; border-radius: 6px; padding: 0.75rem 1rem; background: #0057ff; color: white; cursor: pointer; }
+      pre { background: #121826; color: #dce6ff; padding: 1rem; border-radius: 8px; overflow: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>SwiPay POS PMS Dashboard</h1>
+    <p>Lokales Test-Dashboard für ep2 Datenfluss zwischen Terminal und PMS.</p>
+
+    <button id="simulateBtn">Terminal-Simulation starten (ep2 Sample)</button>
+
+    <div class="grid" id="kpis"></div>
+
+    <h2>Raw Summary</h2>
+    <pre id="raw">Lade Daten...</pre>
+
+    <script>
+      const raw = document.getElementById("raw");
+      const kpis = document.getElementById("kpis");
+
+      async function refresh() {
+        const res = await fetch('/api/v1/dashboard/summary');
+        const data = await res.json();
+        raw.textContent = JSON.stringify(data, null, 2);
+        kpis.innerHTML = `
+          <div class="card"><strong>Total Events</strong><div>${data.total_events}</div></div>
+          <div class="card"><strong>Payments (EUR)</strong><div>${data.total_payment_amount.toFixed(2)}</div></div>
+          <div class="card"><strong>Terminals</strong><div>${Object.keys(data.by_terminal).length}</div></div>
+        `;
+      }
+
+      document.getElementById("simulateBtn").addEventListener("click", async () => {
+        await fetch('/api/v1/simulator/push-sample', { method: 'POST' });
+        await refresh();
+      });
+
+      refresh();
+    </script>
+  </body>
+</html>
